@@ -1,11 +1,12 @@
-
-
-
 local a=game:GetService"Players"
 local b=game:GetService"RunService"
 
 local c=a.LocalPlayer
 local d={}
+
+
+getgenv().__ESP_Boxes=d
+getgenv().__ESP_Connections=getgenv().__ESP_Connections or{}
 
 local e={
 BoxColor=Color3.fromRGB(255,0,0),
@@ -15,7 +16,6 @@ OutlineThickness=3,
 ShowBox=true,
 MaxDistance=1000,
 }
-
 
 local f
 if typeof(WorldToScreen)=="function"then
@@ -78,8 +78,6 @@ if g==c then return end
 d[g]=createESPBox()
 end
 
-
-
 local function getCharacterBounds(g)
 local h=g:FindFirstChild"HumanoidRootPart"
 local i=g:FindFirstChildOfClass"Humanoid"
@@ -91,20 +89,17 @@ end
 local j=h.Position
 local k=5.0
 
-
 local l=Vector3.new(j.X,j.Y+k/2,j.Z)
 local m=Vector3.new(j.X,j.Y-k/2,j.Z)
 
 local n,o,p=toScreen(l)
 local q,r,s=toScreen(m)
 
-
 if not o or not r then return nil end
 if p<=0 or s<=0 then return nil end
 
 local t=math.abs(q.Y-n.Y)
 if t<=0 then return nil end
-
 
 local u=t*0.5
 
@@ -119,7 +114,8 @@ Height=t,
 }
 end
 
-b.RenderStepped:Connect(function()
+
+local g=b.RenderStepped:Connect(function()
 for g,h in pairs(d)do
 if not g or not g.Parent then
 removeESPBox(g)
@@ -169,15 +165,16 @@ h.Fill.Visible=false
 end
 end
 end)
+table.insert(getgenv().__ESP_Connections,g)
 
-for g,h in ipairs(a:GetPlayers())do
-addPlayer(h)
+for h,i in ipairs(a:GetPlayers())do
+addPlayer(i)
 end
 
 a.PlayerAdded:Connect(addPlayer)
 
-a.PlayerRemoving:Connect(function(g)
-removeESPBox(g)
+a.PlayerRemoving:Connect(function(h)
+removeESPBox(h)
 end)
 
 print("[ESP] 2D Box ESP loaded. Tracking "..#a:GetPlayers()-1 .." player(s).")
