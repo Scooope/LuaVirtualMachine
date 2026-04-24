@@ -177,4 +177,17 @@ a.PlayerRemoving:Connect(function(h)
 removeESPBox(h)
 end)
 
+
+while _G.ESPEnabled do
+    wait()
+    -- esp logic
+end
+
+-- After loop exits, clean up all drawings
+for _, player in ipairs(ESPObjects) do
+    player.Box:Remove()
+    player.Name:Remove()
+    -- etc, whatever drawings your ESP creates
+end
+
 print("[ESP] 2D Box ESP loaded. Tracking "..#a:GetPlayers()-1 .." player(s).")
